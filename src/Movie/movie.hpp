@@ -16,9 +16,10 @@ using namespace std;
 /* Movie class */
 class Movie {
   private:
-    string name;            // the name of the movie
-    int year;               // the year of the movie
-    vector<Actor*> actors;  // the actors perform in the movie
+    string name_year;            // the name#@year of the movie
+    vector<int, Actor*> actors;  // the actors perform in the movie
+  public:
+    Movie(string name_and_year) : name_year(name_and_year) {}
 };
 
 #endif  // MOVIE_HPP

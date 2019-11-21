@@ -28,6 +28,7 @@ class Actor {
     //     Movie* mv = new Movie(movie, year);
     //     movies.push_back(mv);
     // }
+    void points_to_movie(Movie* mv_ptr) { movies.push_back(mv_ptr); }
 };
 
 #endif  // ACTOR_HPP

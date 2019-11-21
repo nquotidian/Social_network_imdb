@@ -91,10 +91,10 @@ bool ActorGraph::loadFromFile(const char* in_filename,
 void ActorGraph::build_unweighted_actor_graph(string actor_name,
                                               string movie_title, int year) {
     // The graph of actors is empty or the actor is not in the graph
-    if (actors_graph.empty() ||
-        ((*actors_graph.rbegin())->get_actor_name() != actor_name)) {
+    if (actors_list.empty() ||
+        actors_list.find(actor_name) == actors_list.end()) {
         Actor* act = new Actor(actor_name);
-        actors_graph.push_back(act);
+        actors_list[actor_name] = act;
     }
 
     string movie_year = movie_title + "#@" + std::to_string(year);
@@ -104,11 +104,33 @@ void ActorGraph::build_unweighted_actor_graph(string actor_name,
         Movie* mv = new Movie(movie_year);
         movies_list[movie_year] = mv;
         // actor points to movie
+        actors_list[actor_name]->points_to_movie(mv);
     } else {
-        // the movie already exists
-        // movie points to the movie
+        // the movie already exists, movie points to the actor
+        movies_list[movie_year]->points_to_actor(1, actors_list[actor_name]);
     }
 }
 
 void ActorGraph::build_weighted_actor_graph(string actor_name,
-                                            string movie_title, int year) {}
+                                            string movie_title, int year) {
+    // The graph of actors is empty or the actor is not in the graph
+    if (actors_list.empty() ||
+        actors_list.find(actor_name) == actors_list.end()) {
+        Actor* act = new Actor(actor_name);
+        actors_list[actor_name] = act;
+    }
+
+    string movie_year = movie_title + "#@" + std::to_string(year);
+    // Movie list is empty or movie not in the movies_list
+    if (movies_list.empty() ||
+        movies_list.find(movie_year) == movies_list.end()) {
+        Movie* mv = new Movie(movie_year);
+        movies_list[movie_year] = mv;
+        // actor points to movie
+        actors_list[actor_name]->points_to_movie(mv);
+    } else {
+        // the movie already exists, movie points to the actor
+        movies_list[movie_year]->points_to_actor(1 + (2019 - year),
+                                                 actors_list[actor_name]);
+    }
+}

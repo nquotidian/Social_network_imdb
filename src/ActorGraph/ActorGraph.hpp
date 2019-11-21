@@ -28,7 +28,8 @@ class ActorGraph {
     // Maybe add class data structure(s) here
     Actor* root = nullptr;
     // Graph for actors and graph for movies
-    vector<Actor*> actors_graph;
+    // vector<Actor*> actors_graph;
+    unordered_map<string, Actor*> actors_list;
     unordered_map<string, Movie*> movies_list;
     // vector<Movie*> movies_graph;
 

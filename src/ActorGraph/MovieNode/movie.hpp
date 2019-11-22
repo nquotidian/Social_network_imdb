@@ -46,10 +46,10 @@ class Movie {
     /* The number of connections of a single movie */
     long num_of_edges() {
         long n = actors.size();
-        if (!n)
+        if (n <= 1)
             return 0;
         else
-            return n * (n + 1);
+            return n * (n - 1);
     }
 };
 

@@ -103,12 +103,13 @@ void ActorGraph::build_unweighted_actor_graph(string actor_name,
         movies_list.find(movie_year) == movies_list.end()) {
         Movie* mv = new Movie(movie_year);
         movies_list[movie_year] = mv;
-        // actor points to movie
-        actors_list[actor_name]->points_to_movie(mv);
-    } else {
-        // the movie already exists, movie points to the actor
-        movies_list[movie_year]->points_to_actor(1, actors_list[actor_name]);
     }
+    auto actor = actors_list[actor_name];
+    auto movie = movies_list[movie_year];
+    // actor points to movie
+    actor->points_to_movie(movie);
+    // movie points to the actor
+    movie->points_to_actor(1, actor);
 }
 
 void ActorGraph::build_weighted_actor_graph(string actor_name,
@@ -121,18 +122,18 @@ void ActorGraph::build_weighted_actor_graph(string actor_name,
     }
 
     string movie_year = movie_title + "#@" + std::to_string(year);
-    // Movie list is empty or movie not in the movies_list
+    // Movie list is empty or movie is not in the movies_list
     if (movies_list.empty() ||
         movies_list.find(movie_year) == movies_list.end()) {
         Movie* mv = new Movie(movie_year);
         movies_list[movie_year] = mv;
-        // actor points to movie
-        actors_list[actor_name]->points_to_movie(mv);
-    } else {
-        // the movie already exists, movie points to the actor
-        movies_list[movie_year]->points_to_actor(1 + (2019 - year),
-                                                 actors_list[actor_name]);
     }
+    auto actor = actors_list[actor_name];
+    auto movie = movies_list[movie_year];
+    // actor points to movie
+    actor->points_to_movie(movie);
+    // movie points to the actor
+    movie->points_to_actor(2020 - year, actor);
 }
 
 long ActorGraph::number_of_actors() {

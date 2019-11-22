@@ -37,13 +37,14 @@ class ActorGraph {
     ActorGraph(void);
 
     // Maybe add some more methods here
+    // Add actor node and movie node
+    void add_actor_movie_node(string actor_name, string movie_and_year);
     // Build unweighted actor movie connection graph
     void build_unweighted_actor_graph(string actor_name, string movie_title,
                                       int year);
     // Build weighted actor movie connection graph
     void build_weighted_actor_graph(string actor_name, string movie_title,
                                     int year);
-
     // For test
     // void traverse_actor_list();
     long number_of_movies();

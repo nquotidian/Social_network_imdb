@@ -88,22 +88,25 @@ bool ActorGraph::loadFromFile(const char* in_filename,
     return true;
 }
 
-void ActorGraph::build_unweighted_actor_graph(string actor_name,
-                                              string movie_title, int year) {
+void ActorGraph::add_actor_movie_node(string actor_name,
+                                      string movie_and_year) {
     // The graph of actors is empty or the actor is not in the graph
     if (actors_list.empty() ||
         actors_list.find(actor_name) == actors_list.end()) {
         Actor* act = new Actor(actor_name);
         actors_list[actor_name] = act;
     }
-
-    string movie_year = movie_title + "#@" + std::to_string(year);
     // Movie list is empty or movie is not in the movies_list
     if (movies_list.empty() ||
-        movies_list.find(movie_year) == movies_list.end()) {
-        Movie* mv = new Movie(movie_year);
-        movies_list[movie_year] = mv;
+        movies_list.find(movie_and_year) == movies_list.end()) {
+        Movie* mv = new Movie(movie_and_year);
+        movies_list[movie_and_year] = mv;
     }
+}
+void ActorGraph::build_unweighted_actor_graph(string actor_name,
+                                              string movie_title, int year) {
+    string movie_year = movie_title + "#@" + std::to_string(year);
+    add_actor_movie_node(actor_name, movie_year);
     auto actor = actors_list[actor_name];
     auto movie = movies_list[movie_year];
     // actor points to movie
@@ -114,20 +117,8 @@ void ActorGraph::build_unweighted_actor_graph(string actor_name,
 
 void ActorGraph::build_weighted_actor_graph(string actor_name,
                                             string movie_title, int year) {
-    // The graph of actors is empty or the actor is not in the graph
-    if (actors_list.empty() ||
-        actors_list.find(actor_name) == actors_list.end()) {
-        Actor* act = new Actor(actor_name);
-        actors_list[actor_name] = act;
-    }
-
     string movie_year = movie_title + "#@" + std::to_string(year);
-    // Movie list is empty or movie is not in the movies_list
-    if (movies_list.empty() ||
-        movies_list.find(movie_year) == movies_list.end()) {
-        Movie* mv = new Movie(movie_year);
-        movies_list[movie_year] = mv;
-    }
+    add_actor_movie_node(actor_name, movie_year);
     auto actor = actors_list[actor_name];
     auto movie = movies_list[movie_year];
     // actor points to movie

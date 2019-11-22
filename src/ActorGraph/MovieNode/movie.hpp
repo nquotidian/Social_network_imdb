@@ -33,6 +33,14 @@ class Movie {
         e.act = act_ptr;
         actors.push_back(e);
     }
+    string get_movie_name_year() { return name_year; }
+    /* For test */
+    // void traverse_actors() {
+    //     for (unsigned i = 0; i < actors.size(); i++) {
+    //         cout << "  " << actors[i].wei << endl;
+    //     }
+    // }
+    long num_of_edges() { return actors.size(); }
 };
 
 #endif  // MOVIE_HPP

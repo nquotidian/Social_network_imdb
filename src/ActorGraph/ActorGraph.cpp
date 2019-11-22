@@ -98,7 +98,7 @@ void ActorGraph::build_unweighted_actor_graph(string actor_name,
     }
 
     string movie_year = movie_title + "#@" + std::to_string(year);
-    // Movie list is empty or movie not in the movies_list
+    // Movie list is empty or movie is not in the movies_list
     if (movies_list.empty() ||
         movies_list.find(movie_year) == movies_list.end()) {
         Movie* mv = new Movie(movie_year);
@@ -133,4 +133,25 @@ void ActorGraph::build_weighted_actor_graph(string actor_name,
         movies_list[movie_year]->points_to_actor(1 + (2019 - year),
                                                  actors_list[actor_name]);
     }
+}
+
+void ActorGraph::traverse_actor_list() {
+    // auto it = actors_list.begin();
+    long actor_num = 0;
+    for (auto it = actors_list.begin(); it != actors_list.end(); it++) {
+        // cout << (*it).first << endl;
+        // (*it).second->traverse_movies();
+        actor_num++;
+    }
+    cout << "actors: " << actor_num << endl;
+    long movie_num = 0;
+    long edge_num = 0;
+    for (auto i = movies_list.begin(); i != movies_list.end(); i++) {
+        // cout << (*i).first << endl;
+        // (*i).second->traverse_actors();
+        movie_num++;
+        edge_num += (*i).second->num_of_edges();
+    }
+    cout << "movies: " << movie_num << endl;
+    cout << "edges: " << edge_num << endl;
 }

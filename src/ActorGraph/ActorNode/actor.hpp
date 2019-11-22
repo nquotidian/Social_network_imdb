@@ -10,7 +10,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include "movie.hpp"
+#include "MovieNode/movie.hpp"
 
 using namespace std;
 
@@ -29,6 +29,12 @@ class Actor {
     //     movies.push_back(mv);
     // }
     void points_to_movie(Movie* mv_ptr) { movies.push_back(mv_ptr); }
+    /* For test */
+    void traverse_movies() {
+        for (unsigned i = 0; i < movies.size(); i++) {
+            cout << "  " << movies[i]->get_movie_name_year() << endl;
+        }
+    }
 };
 
 #endif  // ACTOR_HPP

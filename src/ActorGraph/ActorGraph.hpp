@@ -13,8 +13,10 @@
 
 #include <iostream>
 #include <unordered_map>
-#include "actor.hpp"
-#include "movie.hpp"
+#include "ActorNode/actor.hpp"
+#include "MovieNode/movie.hpp"
+// #include "actor.hpp"
+// #include "movie.hpp"
 
 // Maybe include some data structures here
 
@@ -26,7 +28,7 @@ using namespace std;
 class ActorGraph {
   protected:
     // Maybe add class data structure(s) here
-    Actor* root = nullptr;
+    // Actor* root = nullptr;
     // Graph for actors and graph for movies
     // vector<Actor*> actors_graph;
     unordered_map<string, Actor*> actors_list;
@@ -45,6 +47,7 @@ class ActorGraph {
     void build_unweighted_actor_graph(string actor_name, string movie_title,
                                       int year);
 
+    void traverse_actor_list();
     /** You can modify this method definition as you wish
      *
      * Load the graph from a tab-delimited file of actor->movie relationships.

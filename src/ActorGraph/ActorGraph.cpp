@@ -1,7 +1,7 @@
 /*
  * ActorGraph.cpp
- * Author: <YOUR NAME HERE>
- * Date:   <DATE HERE>
+ * Author: Qing Niu
+ * Date:   Nov 22, 2019
  *
  * This file is meant to exist as a container for starter code that you can use
  * to read the input file format defined in imdb_2019.tsv. Feel free to modify
@@ -135,23 +135,48 @@ void ActorGraph::build_weighted_actor_graph(string actor_name,
     }
 }
 
-void ActorGraph::traverse_actor_list() {
-    // auto it = actors_list.begin();
+long ActorGraph::number_of_actors() {
     long actor_num = 0;
     for (auto it = actors_list.begin(); it != actors_list.end(); it++) {
-        // cout << (*it).first << endl;
-        // (*it).second->traverse_movies();
         actor_num++;
     }
-    cout << "actors: " << actor_num << endl;
-    long movie_num = 0;
-    long edge_num = 0;
-    for (auto i = movies_list.begin(); i != movies_list.end(); i++) {
-        // cout << (*i).first << endl;
-        // (*i).second->traverse_actors();
-        movie_num++;
-        edge_num += (*i).second->num_of_edges();
-    }
-    cout << "movies: " << movie_num << endl;
-    cout << "edges: " << edge_num << endl;
+    return actor_num;
 }
+
+long ActorGraph::number_of_movies() {
+    long movie_num = 0;
+    for (auto i = movies_list.begin(); i != movies_list.end(); i++) {
+        movie_num++;
+    }
+    return movie_num;
+}
+
+long ActorGraph::number_of_connections() {
+    long connec_num = 0;
+    for (auto i = movies_list.begin(); i != movies_list.end(); i++) {
+        connec_num += i->second->num_of_edges();
+    }
+    return connec_num;
+}
+
+/* Function for test */
+// void ActorGraph::traverse_actor_list() {
+//     // auto it = actors_list.begin();
+//     long actor_num = 0;
+//     for (auto it = actors_list.begin(); it != actors_list.end(); it++) {
+//         // cout << (*it).first << endl;
+//         // (*it).second->traverse_movies();
+//         actor_num++;
+//     }
+//     cout << "actors: " << actor_num << endl;
+//     long movie_num = 0;
+//     long edge_num = 0;
+//     for (auto i = movies_list.begin(); i != movies_list.end(); i++) {
+//         // cout << (*i).first << endl;
+//         // (*i).second->traverse_actors();
+//         movie_num++;
+//         edge_num += (*i).second->num_of_edges();
+//     }
+//     cout << "movies: " << movie_num << endl;
+//     cout << "edges: " << edge_num << endl;
+// }

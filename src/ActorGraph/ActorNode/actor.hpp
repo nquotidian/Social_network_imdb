@@ -1,7 +1,9 @@
 /**
- * Actor class hearder file
- *
+ * actor.hpp
  * Author: Qing Niu
+ * Date:   Nov 22, 2019
+ *
+ * Actor class hearder file
  */
 
 #ifndef ACTOR_HPP
@@ -14,22 +16,24 @@
 
 using namespace std;
 
-/* Actor node class */
+/* Actor node class
+ *  name: actor's name
+ *  movies: list of the actor's movies
+ *
+ * */
 class Actor {
   private:
-    string name;            // the name of the actor
-    vector<Movie*> movies;  // the movies of the actor performed
+    string name;
+    vector<Movie*> movies;
 
   public:
     /* Constructor of actor, add first movie */
     Actor(string actor_name) : name(actor_name) {}
+    /* Get actor's name */
     string get_actor_name() { return name; }
-    // void add_movie(string movie, int year) {
-    //     Movie* mv = new Movie(movie, year);
-    //     movies.push_back(mv);
-    // }
+    /* Created a new movie and points the actor to the movie*/
     void points_to_movie(Movie* mv_ptr) { movies.push_back(mv_ptr); }
-    /* For test */
+    /* Traverse all of the movies in the actor node, for test */
     void traverse_movies() {
         for (unsigned i = 0; i < movies.size(); i++) {
             cout << "  " << movies[i]->get_movie_name_year() << endl;

@@ -11,6 +11,11 @@
 #include "FileUtils.hpp"
 #include "cxxopts.hpp"
 
+/* add pseudo compression with ascii encoding and naive header
+ * (checkpoint) */
+void path_finder(string castsFile, string pairsFile, string outputFile,
+                 bool weighted);
+
 /* Main program that runs the pathfinder */
 int main(int argc, char* argv[]) {
     // define options object with program description and help messages
@@ -52,11 +57,41 @@ int main(int argc, char* argv[]) {
     } else if (graph_option == "u") {
         // Build unweighted graph
         cout << "uuuuu" << endl;
+        path_finder(castsFileName, pairsFileName, outFileName, false);
     } else if (graph_option == "w") {
         // Build weighted graph
         cout << "wwww" << endl;
+        path_finder(castsFileName, pairsFileName, outFileName, true);
     } else {
         cout << options.help({""}) << std::endl;
         exit(0);
+    }
+}
+
+void path_finder(string castsFile, string pairsFile, string outputFile,
+                 bool weighted) {
+    // Create a file stream and read file in binary mode
+    FileUtils fu;
+
+    // If the input file is empty, output an empty file
+    if (fu.isEmptyFile(castsFile) || fu.isEmptyFile(pairsFile)) {
+        // If the output file exists, remove it
+        if (fu.isValidFile(outputFile)) {
+            const char* filePath = outputFile.c_str();
+            remove(filePath);
+        }
+        std::ofstream output(outputFile);
+        return;
+    }
+
+    ActorGraph actor_graph;
+    if (weighted) {
+        if (actor_graph.loadFromFile(castsFile.c_str(), true)) {
+            actor_graph.load_pairs_file(pairsFile, outputFile);
+        }
+    } else {
+        if (actor_graph.loadFromFile(castsFile.c_str(), false)) {
+            actor_graph.load_pairs_file(pairsFile, outputFile);
+        }
     }
 }

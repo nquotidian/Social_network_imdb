@@ -127,6 +127,69 @@ void ActorGraph::build_weighted_actor_graph(string actor_name,
     movie->points_to_actor(2020 - year, actor);
 }
 
+// Load the pairs file
+bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
+    // keep reading the file, if it's not the end of the file
+    // just like the load file function, get he source actor's name
+    // and the target actor's name
+    // Then call the function, find teh shorest path between the two actors
+    // the function output the results.
+
+    // Initialize the file stream
+    ifstream infile(pairsFile);
+
+    bool have_header = false;
+
+    // keep reading lines until the end of file is reached
+    while (infile) {
+        string s;
+
+        // get the next line
+        if (!getline(infile, s)) break;
+
+        if (!have_header) {
+            // skip the header
+            have_header = true;
+            continue;
+        }
+
+        istringstream ss(s);
+        vector<string> record;
+
+        while (ss) {
+            string str;
+            // get the next string before hitting a tab character and put it in
+            if (!getline(ss, str, '\t')) break;
+            record.push_back(str);
+        }
+
+        if (record.size() != 2) {
+            // we should have exactly 3 columns
+            continue;
+        }
+
+        string source(record[0]);
+        string target(record[1]);
+
+        // find the path and output
+        cout << "  " << source << "    " << target << endl;
+        find_path_between_actors(outputFile, source, target);
+    }
+    if (!infile.eof()) {
+        cerr << "Failed to read " << pairsFile << "!\n";
+        return false;
+    }
+    infile.close();
+    return true;
+}
+
+// Find the shorest path between source actor and the target actor
+void ActorGraph::find_path_between_actors(string outputFile, string source,
+                                          string target) {
+    // auto src_actor = actors_list[source];
+    // auto tgt_actor = actors_list[target];
+}
+
 long ActorGraph::number_of_actors() {
     long actor_num = 0;
     for (auto it = actors_list.begin(); it != actors_list.end(); it++) {

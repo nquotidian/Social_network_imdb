@@ -45,6 +45,12 @@ class ActorGraph {
     // Build weighted actor movie connection graph
     void build_weighted_actor_graph(string actor_name, string movie_title,
                                     int year);
+    // Load the pairs file
+    bool load_pairs_file(string pairsFile, string outputFile);
+    // Find the shorest path between source actor and the target actor
+    void find_path_between_actors(string outputFile, string source,
+                                  string target);
+
     // For test
     // void traverse_actor_list();
     long number_of_movies();

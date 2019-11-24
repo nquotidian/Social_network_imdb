@@ -38,7 +38,8 @@ class ActorGraph {
 
     // Maybe add some more methods here
     // Add actor node and movie node
-    void add_actor_movie_node(string actor_name, string movie_and_year);
+    void add_actor_movie_node(string actor_name, string movie_and_year,
+                              int weight);
     // Build unweighted actor movie connection graph
     void build_unweighted_actor_graph(string actor_name, string movie_title,
                                       int year);
@@ -48,9 +49,11 @@ class ActorGraph {
     // Load the pairs file
     bool load_pairs_file(string pairsFile, string outputFile);
     // Find the shorest path between source actor and the target actor
-    void find_path_between_actors(string outputFile, string source,
-                                  string target);
-
+    void find_path_between_actors(ofstream& fs, string source, string target);
+    /* Get all of the connections of the actor, return to a vector*/
+    vector<Actor*> get_connection_list(Actor* actor);
+    // BFS traverse
+    // void  BSTTraverse(string actor, )
     // For test
     // void traverse_actor_list();
     long number_of_movies();

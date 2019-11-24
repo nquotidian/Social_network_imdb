@@ -11,6 +11,7 @@
 #include "ActorGraph.hpp"
 #include <fstream>
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -88,8 +89,8 @@ bool ActorGraph::loadFromFile(const char* in_filename,
     return true;
 }
 
-void ActorGraph::add_actor_movie_node(string actor_name,
-                                      string movie_and_year) {
+void ActorGraph::add_actor_movie_node(string actor_name, string movie_and_year,
+                                      int weight) {
     // The graph of actors is empty or the actor is not in the graph
     if (actors_list.empty() ||
         actors_list.find(actor_name) == actors_list.end()) {
@@ -99,32 +100,33 @@ void ActorGraph::add_actor_movie_node(string actor_name,
     // Movie list is empty or movie is not in the movies_list
     if (movies_list.empty() ||
         movies_list.find(movie_and_year) == movies_list.end()) {
-        Movie* mv = new Movie(movie_and_year);
+        Movie* mv = new Movie(movie_and_year, weight);
         movies_list[movie_and_year] = mv;
     }
 }
+
 void ActorGraph::build_unweighted_actor_graph(string actor_name,
                                               string movie_title, int year) {
     string movie_year = movie_title + "#@" + std::to_string(year);
-    add_actor_movie_node(actor_name, movie_year);
+    add_actor_movie_node(actor_name, movie_year, 1);
     auto actor = actors_list[actor_name];
     auto movie = movies_list[movie_year];
     // actor points to movie
     actor->points_to_movie(movie);
     // movie points to the actor
-    movie->points_to_actor(1, actor);
+    movie->points_to_actor(actor);
 }
 
 void ActorGraph::build_weighted_actor_graph(string actor_name,
                                             string movie_title, int year) {
     string movie_year = movie_title + "#@" + std::to_string(year);
-    add_actor_movie_node(actor_name, movie_year);
+    add_actor_movie_node(actor_name, movie_year, 2020 - year);
     auto actor = actors_list[actor_name];
     auto movie = movies_list[movie_year];
     // actor points to movie
     actor->points_to_movie(movie);
     // movie points to the actor
-    movie->points_to_actor(2020 - year, actor);
+    movie->points_to_actor(actor);
 }
 
 // Load the pairs file
@@ -137,9 +139,11 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
 
     // Initialize the file stream
     ifstream infile(pairsFile);
-
+    ofstream ofs(outputFile);
     bool have_header = false;
 
+    // Output the header of the output file
+    ofs << "(actor)--[movie#@year]-->(actor)--..." << endl;
     // keep reading lines until the end of file is reached
     while (infile) {
         string s;
@@ -173,21 +177,44 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
 
         // find the path and output
         cout << "  " << source << "    " << target << endl;
-        find_path_between_actors(outputFile, source, target);
+        find_path_between_actors(ofs, source, target);
     }
     if (!infile.eof()) {
         cerr << "Failed to read " << pairsFile << "!\n";
         return false;
     }
     infile.close();
+    ofs.close();
     return true;
 }
 
 // Find the shorest path between source actor and the target actor
-void ActorGraph::find_path_between_actors(string outputFile, string source,
+void ActorGraph::find_path_between_actors(ofstream& fs, string source,
                                           string target) {
+    // Find the source actor
     // auto src_actor = actors_list[source];
-    // auto tgt_actor = actors_list[target];
+    // // auto tgt_actor = actors_list[target];
+    // queue<Actor*> que;
+    // int dist = 0;
+    // que.push(src_actor);
+    // while (!que.empty()) {
+    //     auto next = que.front();
+    //     vector<Actor*> con_list = get_connection_list(next);
+    //     que.pop();
+    //     vector<Actor*>::iterator it = con_list.begin();
+    //     for (; it != con_list.end(); it++) {
+    //         //
+    //     }
+    // }
+}
+
+/* Get all of the connections of the actor, return to a vector*/
+vector<Actor*> ActorGraph::get_connection_list(Actor* actor) {
+    // vector<Movie*> movies = actor->get_movie_lists();
+    // vector<Actor*> connection_list;
+    // vector<Actor*>::iterator it = movies.begin();
+    // for (; it != movies.end(); it++) {
+    // }
 }
 
 long ActorGraph::number_of_actors() {

@@ -17,11 +17,6 @@ using namespace std;
 
 class Actor;
 
-struct Edge {
-    int wei;
-    Actor* act;
-};
-
 /* Movie node class
  *  name_year: movie's name + movie's year
  *  movies: list the weight and the actor's name
@@ -29,20 +24,17 @@ struct Edge {
  * */
 class Movie {
   private:
-    string name_year;     // the name#@year of the movie
-    vector<Edge> actors;  // the actors perform in the movie
+    string name_year;       // the name#@year of the movie
+    int weight;             // the weight of the movie
+    vector<Actor*> actors;  // the actors perform in the movie
   public:
     /* Constructor of movie */
-    Movie(string name_and_year) : name_year(name_and_year) {}
+    Movie(string name_and_year, int wei)
+        : name_year(name_and_year), weight(wei) {}
     /* Get the movie's name */
     string get_movie_name_year() { return name_year; }
     /* Points the movie to the actor */
-    void points_to_actor(int weight, Actor* act_ptr) {
-        struct Edge e;
-        e.wei = weight;
-        e.act = act_ptr;
-        actors.push_back(e);
-    }
+    void points_to_actor(Actor* act_ptr) { actors.push_back(act_ptr); }
     /* The number of connections of a single movie */
     long num_of_edges() {
         long n = actors.size();

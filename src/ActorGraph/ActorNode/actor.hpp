@@ -25,10 +25,11 @@ class Actor {
   private:
     string name;
     vector<Movie*> movies;
+    int dist;
 
   public:
     /* Constructor of actor, add first movie */
-    Actor(string actor_name) : name(actor_name) {}
+    Actor(string actor_name) : name(actor_name), dist(INT8_MAX) {}
     /* Get actor's name */
     string get_actor_name() { return name; }
     /* Created a new movie and points the actor to the movie*/
@@ -39,6 +40,12 @@ class Actor {
             cout << "  " << movies[i]->get_movie_name_year() << endl;
         }
     }
+    /* Set the distance to the actor */
+    void set_dist(int d) { dist = d; }
+    /* Get the distance of the actor */
+    int get_dist() { return dist; }
+    /* Get the list of movies of the actor*/
+    vector<Movie*> get_movie_lists() { return movies; }
 };
 
 #endif  // ACTOR_HPP

@@ -176,7 +176,6 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
         string target(record[1]);
 
         // find the path and output
-        cout << "  " << source << "  " << target << endl;
         find_path_between_actors(ofs, source, target);
     }
     if (!infile.eof()) {
@@ -191,20 +190,21 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
 // Find the shorest path between source actor and the target actor
 void ActorGraph::find_path_between_actors(ofstream& fs, string source,
                                           string target) {
-    // Find the source actor
-    auto src_actor = actors_list[source];
     // auto tgt_actor = actors_list[target];
-    if (!src_actor || !actors_list[target]) {
-        cout << endl;
+    if (actors_list.find(source) == actors_list.end() ||
+        actors_list.find(target) == actors_list.end()) {
         fs << endl;
         return;
     }
-    unordered_map<string, Actor*>::iterator map_it;
+    // Initialize
+    auto map_it = actors_list.begin();
     for (; map_it != actors_list.end(); map_it++) {
         map_it->second->set_dist(INT8_MAX);
         map_it->second->set_prev(nullptr, nullptr);
     }
     // Set the source distance
+    // Find the source actor
+    auto src_actor = actors_list[source];
     src_actor->set_dist(0);
     queue<Actor*> que;
     que.push(src_actor);
@@ -241,30 +241,17 @@ void ActorGraph::find_path_between_actors(ofstream& fs, string source,
             result += "(" + neighbor->get_actor_name() + ")";
             auto ptr = neighbor->get_prev();
             while (ptr.first && ptr.second) {
-                // result += "--[" + ptr.second->get_movie_name_year() + "]";
                 result.insert(0,
                               "[" + ptr.second->get_movie_name_year() + "]-->");
-                // result += "-->(" + ptr.first->get_actor_name() + ")";
                 result.insert(0, "(" + ptr.first->get_actor_name() + ")--");
                 ptr = ptr.first->get_prev();
             }
             fs << result << endl;
-            cout << result << endl;
         }
     } else {
-        cout << endl;
         fs << endl;
     }
 }
-
-/* Get all of the connections of the actor, return to a vector*/
-// vector<Actor*> ActorGraph::get_connection_list(Actor* actor) {
-//     // vector<Movie*> movies = actor->get_movie_lists();
-//     // vector<Actor*> connection_list;
-//     // vector<Actor*>::iterator it = movies.begin();
-//     // for (; it != movies.end(); it++) {
-//     // }
-// }
 
 long ActorGraph::number_of_actors() {
     long actor_num = 0;

@@ -52,6 +52,16 @@ class ActorGraph {
     void find_path_between_actors(ofstream& fs, string source, string target);
     /* Get all of the connections of the actor, return to a vector*/
     vector<Actor*> get_connection_list(Actor* actor);
+    /* Linke predictor part */
+    // Load the predict file
+    bool load_predict_file(string predictFile, string coledFile,
+                           string uncoledFile);
+    /* Predict link of the actor */
+    void predict_link(string source, ofstream& output);
+    /* Find actors who have collaborated with given actor */
+    void find_collaborated_group();
+    /* Find actors who have not collaborated with given actor */
+    void find_uncollaborated_group();
     // BFS traverse
     // void  BSTTraverse(string actor, )
     // For test

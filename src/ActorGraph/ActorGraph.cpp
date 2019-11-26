@@ -168,7 +168,7 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
         }
 
         if (record.size() != 2) {
-            // we should have exactly 3 columns
+            // we should have exactly 2 columns
             continue;
         }
 
@@ -251,6 +251,46 @@ void ActorGraph::find_path_between_actors(ofstream& fs, string source,
     } else {
         fs << endl;
     }
+}
+
+/* Predict link of the actor */
+void ActorGraph::predict_link(string source, ofstream& output) {
+    //
+    cout << source << endl;
+}
+
+// Load predict file
+bool ActorGraph::load_predict_file(string predictFile, string coledFile,
+                                   string uncoledFile) {
+    // Initialize the file stream
+    ifstream infile(predictFile);
+    ofstream ofs(coledFile);
+    ofstream ofs_2(uncoledFile);
+    bool have_header = false;
+    string line;
+    // Output the header of the output file
+    ofs << "..." << endl;
+    // keep reading lines until the end of file is reached
+
+    for (; getline(infile, line);) {
+        if (!have_header) {
+            // skip the header
+            have_header = true;
+            continue;
+        }
+        // cout << line << endl;
+        //  cout << line << "---";
+        predict_link(line, ofs);
+    }
+
+    if (!infile.eof()) {
+        cerr << "Failed to read " << predictFile << "!\n";
+        return false;
+    }
+    infile.close();
+    ofs.close();
+    ofs_2.close();
+    return true;
 }
 
 long ActorGraph::number_of_actors() {

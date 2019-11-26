@@ -11,8 +11,7 @@
 #include "FileUtils.hpp"
 #include "cxxopts.hpp"
 
-/* add pseudo compression with ascii encoding and naive header
- * (checkpoint) */
+/* path finder function, find the shorest path between two actors */
 void path_finder(string castsFile, string pairsFile, string outputFile,
                  bool weighted);
 

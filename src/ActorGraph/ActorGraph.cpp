@@ -293,6 +293,15 @@ bool ActorGraph::load_predict_file(string predictFile, string coledFile,
     return true;
 }
 
+/* Find actors who have collaborated with given actor */
+void ActorGraph::find_collaborated_group(string source) {
+    priority_queue<Link, std::vector<Link>, LinkComp> my_pq;
+    my_pq.empty();
+}
+
+/* Find actors who have not collaborated with given actor */
+void ActorGraph::find_uncollaborated_group(string source) {}
+
 long ActorGraph::number_of_actors() {
     long actor_num = 0;
     for (auto it = actors_list.begin(); it != actors_list.end(); it++) {

@@ -23,6 +23,23 @@ using namespace std;
 /**
  * class to store the actors' list and movies' list
  */
+class Link {
+  public:
+    string actor;
+    int weight;
+};
+
+struct LinkComp {
+    /* Comparator */
+    bool operator()(Link*& l, Link*& r) const {
+        if (l->weight != r->weight) {
+            return l->weight > r->weight;
+        } else {
+            return l->actor < r->actor;
+        }
+    }
+};
+
 class ActorGraph {
   protected:
     // Maybe add class data structure(s) here
@@ -59,9 +76,9 @@ class ActorGraph {
     /* Predict link of the actor */
     void predict_link(string source, ofstream& output);
     /* Find actors who have collaborated with given actor */
-    void find_collaborated_group();
+    void find_collaborated_group(string source);
     /* Find actors who have not collaborated with given actor */
-    void find_uncollaborated_group();
+    void find_uncollaborated_group(string source);
     // BFS traverse
     // void  BSTTraverse(string actor, )
     // For test

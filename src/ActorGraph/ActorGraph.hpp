@@ -33,9 +33,9 @@ struct LinkComp {
     /* Comparator */
     bool operator()(Link*& l, Link*& r) const {
         if (l->weight != r->weight) {
-            return l->weight > r->weight;
+            return l->weight < r->weight;
         } else {
-            return l->actor < r->actor;
+            return l->actor > r->actor;
         }
     }
 };
@@ -74,11 +74,13 @@ class ActorGraph {
     bool load_predict_file(string predictFile, string coledFile,
                            string uncoledFile);
     /* Predict link of the actor */
-    void predict_link(string source, ofstream& output);
+    void predict_link(string source, ofstream& ofs_col, ofstream& ofs_uncol);
     /* Find actors who have collaborated with given actor */
-    void find_collaborated_group(string source);
+    vector<string> find_collaborated_group(string source);
     /* Find actors who have not collaborated with given actor */
-    void find_uncollaborated_group(string source);
+    vector<string> find_uncollaborated_group(string source);
+    /* Calculate priority */
+    int calculate_coled_pri(Actor* actor, vector<Actor*> list);
     // BFS traverse
     // void  BSTTraverse(string actor, )
     // For test

@@ -254,9 +254,16 @@ void ActorGraph::find_path_between_actors(ofstream& fs, string source,
 }
 
 /* Predict link of the actor */
-void ActorGraph::predict_link(string source, ofstream& output) {
-    //
-    cout << source << endl;
+void ActorGraph::predict_link(string source, ofstream& ofs_col,
+                              ofstream& ofs_uncol) {
+    vector<string> col_vec = find_collaborated_group(source);
+    if (!col_vec.empty()) {
+        ofs_col << "not empty" << endl;
+    } else {
+        ofs_col << endl;
+    }
+    vector<string> uncol_vec = find_uncollaborated_group(source);
+    ofs_uncol << endl;
 }
 
 // Load predict file
@@ -264,12 +271,13 @@ bool ActorGraph::load_predict_file(string predictFile, string coledFile,
                                    string uncoledFile) {
     // Initialize the file stream
     ifstream infile(predictFile);
-    ofstream ofs(coledFile);
-    ofstream ofs_2(uncoledFile);
+    ofstream ofs_col(coledFile);
+    ofstream ofs_uncol(uncoledFile);
     bool have_header = false;
     string line;
     // Output the header of the output file
-    ofs << "..." << endl;
+    ofs_col << "hearder_col" << endl;
+    ofs_uncol << "header_uncol" << endl;
     // keep reading lines until the end of file is reached
 
     for (; getline(infile, line);) {
@@ -278,9 +286,7 @@ bool ActorGraph::load_predict_file(string predictFile, string coledFile,
             have_header = true;
             continue;
         }
-        // cout << line << endl;
-        //  cout << line << "---";
-        predict_link(line, ofs);
+        predict_link(line, ofs_col, ofs_uncol);
     }
 
     if (!infile.eof()) {
@@ -288,19 +294,56 @@ bool ActorGraph::load_predict_file(string predictFile, string coledFile,
         return false;
     }
     infile.close();
-    ofs.close();
-    ofs_2.close();
+    ofs_col.close();
+    ofs_uncol.close();
     return true;
 }
 
 /* Find actors who have collaborated with given actor */
-void ActorGraph::find_collaborated_group(string source) {
+vector<string> ActorGraph::find_collaborated_group(string source) {
     priority_queue<Link, std::vector<Link>, LinkComp> my_pq;
-    my_pq.empty();
+    vector<string> col_v;
+    vector<Actor*> coled_list;
+    if (actors_list.find(source) == actors_list.end()) {
+        return col_v;
+    } else {
+        auto actor = actors_list[source];
+        vector<Movie*> m_list = actor->get_movie_lists();
+        auto m_it = m_list.begin();
+        for (; m_it != m_list.end(); m_it++) {
+            vector<Actor*> a_list = (*m_it)->get_actor_lists();
+            auto a_it = a_list.begin();
+            for (; a_it != a_list.end(); a_it++) {
+                if ((*a_it)->get_actor_name() != source) {
+                    coled_list.push_back(*a_it);
+                }
+            }
+        }
+        // Calculate the value
+        cout << "link of " << source << endl;
+        int priority = 0;
+        for (auto i = coled_list.begin(); i != coled_list.end(); i++) {
+            // priority += (*i)->get_actor_name();
+            col_v.push_back((*i)->get_actor_name());
+        }
+        cout << endl;
+        return col_v;
+    }
+}
+/* Find actors who have not collaborated with given actor */
+vector<string> ActorGraph::find_uncollaborated_group(string source) {
+    vector<string> uncol_v;
+    return uncol_v;
 }
 
-/* Find actors who have not collaborated with given actor */
-void ActorGraph::find_uncollaborated_group(string source) {}
+/* Calculate priority */
+int calculate_coled_pri(Actor* actor, vector<Actor*> list) {
+    int pri = 0;
+    // for all of movies of A, if A is not C,
+    //      for all of actors of this movie
+    //          if its not C,
+    return pri;
+}
 
 long ActorGraph::number_of_actors() {
     long actor_num = 0;

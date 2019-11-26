@@ -43,6 +43,8 @@ class Movie {
         else
             return n * (n - 1);
     }
+    /* Get the list of movies of the actor*/
+    vector<Actor*> get_actor_lists() { return actors; }
 };
 
 #endif  // MOVIE_HPP

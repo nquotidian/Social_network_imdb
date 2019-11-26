@@ -56,11 +56,9 @@ int main(int argc, char* argv[]) {
         exit(0);
     } else if (graph_option == "u") {
         // Build unweighted graph
-        cout << "uuuuu" << endl;
         path_finder(castsFileName, pairsFileName, outFileName, false);
     } else if (graph_option == "w") {
         // Build weighted graph
-        cout << "wwww" << endl;
         path_finder(castsFileName, pairsFileName, outFileName, true);
     } else {
         cout << options.help({""}) << std::endl;

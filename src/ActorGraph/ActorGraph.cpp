@@ -176,7 +176,7 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
         string target(record[1]);
 
         // find the path and output
-        cout << "  " << source << "    " << target << endl;
+        cout << "  " << source << "  " << target << endl;
         find_path_between_actors(ofs, source, target);
     }
     if (!infile.eof()) {
@@ -192,30 +192,79 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
 void ActorGraph::find_path_between_actors(ofstream& fs, string source,
                                           string target) {
     // Find the source actor
-    // auto src_actor = actors_list[source];
-    // // auto tgt_actor = actors_list[target];
-    // queue<Actor*> que;
-    // int dist = 0;
-    // que.push(src_actor);
-    // while (!que.empty()) {
-    //     auto next = que.front();
-    //     vector<Actor*> con_list = get_connection_list(next);
-    //     que.pop();
-    //     vector<Actor*>::iterator it = con_list.begin();
-    //     for (; it != con_list.end(); it++) {
-    //         //
-    //     }
-    // }
+    auto src_actor = actors_list[source];
+    // auto tgt_actor = actors_list[target];
+    if (!src_actor || !actors_list[target]) {
+        cout << endl;
+        fs << endl;
+        return;
+    }
+    unordered_map<string, Actor*>::iterator map_it;
+    for (; map_it != actors_list.end(); map_it++) {
+        map_it->second->set_dist(INT8_MAX);
+        map_it->second->set_prev(nullptr, nullptr);
+    }
+    // Set the source distance
+    src_actor->set_dist(0);
+    queue<Actor*> que;
+    que.push(src_actor);
+    bool flag = false;
+    Actor* neighbor = nullptr;
+    while (!que.empty() && !flag) {
+        auto next = que.front();
+        que.pop();
+        vector<Movie*> m_list = next->get_movie_lists();
+        vector<Movie*>::iterator m_it = m_list.begin();
+        for (; m_it != m_list.end() && !flag; m_it++) {
+            vector<Actor*> a_list = (*m_it)->get_actor_lists();
+            vector<Actor*>::iterator a_it = a_list.begin();
+            for (; a_it != a_list.end() && !flag; a_it++) {
+                neighbor = *a_it;
+                string name = neighbor->get_actor_name();
+                if (name != next->get_actor_name()) {
+                    // if not visted, visit
+                    if (neighbor->get_dist() == INT8_MAX) {
+                        neighbor->set_dist(next->get_dist() + 1);
+                        neighbor->set_prev(next, *m_it);
+                        que.push(neighbor);
+                        if (name == target) {
+                            flag = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (flag) {
+        string result = "";
+        if (neighbor->get_prev().first) {
+            result += "(" + neighbor->get_actor_name() + ")";
+            auto ptr = neighbor->get_prev();
+            while (ptr.first && ptr.second) {
+                // result += "--[" + ptr.second->get_movie_name_year() + "]";
+                result.insert(0,
+                              "[" + ptr.second->get_movie_name_year() + "]-->");
+                // result += "-->(" + ptr.first->get_actor_name() + ")";
+                result.insert(0, "(" + ptr.first->get_actor_name() + ")--");
+                ptr = ptr.first->get_prev();
+            }
+            fs << result << endl;
+            cout << result << endl;
+        }
+    } else {
+        cout << endl;
+        fs << endl;
+    }
 }
 
 /* Get all of the connections of the actor, return to a vector*/
-vector<Actor*> ActorGraph::get_connection_list(Actor* actor) {
-    // vector<Movie*> movies = actor->get_movie_lists();
-    // vector<Actor*> connection_list;
-    // vector<Actor*>::iterator it = movies.begin();
-    // for (; it != movies.end(); it++) {
-    // }
-}
+// vector<Actor*> ActorGraph::get_connection_list(Actor* actor) {
+//     // vector<Movie*> movies = actor->get_movie_lists();
+//     // vector<Actor*> connection_list;
+//     // vector<Actor*>::iterator it = movies.begin();
+//     // for (; it != movies.end(); it++) {
+//     // }
+// }
 
 long ActorGraph::number_of_actors() {
     long actor_num = 0;

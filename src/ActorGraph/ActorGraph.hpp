@@ -36,7 +36,7 @@ struct LinkComp {
         if (l->weight != r->weight) {
             return l->weight < r->weight;
         } else {
-            return l->actor > r->actor;
+            return l->actor->get_actor_name() > r->actor->get_actor_name();
         }
     }
 };

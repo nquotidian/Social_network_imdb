@@ -390,13 +390,6 @@ vector<string> ActorGraph::find_uncollaborated_group(string source) {
 string ActorGraph::coled_actors(Actor* actor, vector<Actor*> list) {
     // for all of movies of A, if A is not C,
     //      for all of actors of this movie
-    //          if its not C,
-    /*For each movie query actor is in:
-        For each cast member of this movie (who is not the
-candidate nor the query actor)
-○ Priority += number of connections candidate has with
-this cast member.
-    */
     priority_queue<Link*, std::vector<Link*>, LinkComp> my_pq;
     int priority = 0;
     for (auto i = list.begin(); i != list.end(); i++) {
@@ -414,6 +407,7 @@ this cast member.
                 }
             }
         }
+        // cout << "   " << (*i)->get_actor_name() << "   " << priority << endl;
         Link* lk = new Link((*i), priority);
         my_pq.push(lk);
     }

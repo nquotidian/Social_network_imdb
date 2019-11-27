@@ -25,8 +25,9 @@ using namespace std;
  */
 class Link {
   public:
-    string actor;
+    Actor* actor;
     int weight;
+    Link(Actor* a, int w) : actor(a), weight(w) {}
 };
 
 struct LinkComp {
@@ -75,14 +76,16 @@ class ActorGraph {
                            string uncoledFile);
     /* Predict link of the actor */
     void predict_link(string source, ofstream& ofs_col, ofstream& ofs_uncol);
-    /* BFS of the graph */
+    /* Partial BFS of the graph */
     void BFS(string source);
     /* Find actors who have collaborated with given actor */
     vector<string> find_collaborated_group(string source);
     /* Find actors who have not collaborated with given actor */
     vector<string> find_uncollaborated_group(string source);
     /* Calculate priority */
-    int calculate_coled_pri(Actor* actor, vector<Actor*> list);
+    string coled_actors(Actor* actor, vector<Actor*> list);
+    string uncoled_actors(Actor* actor, vector<Actor*> list);
+    int connection_between_casts(Actor* s_actor, Actor* t_actor);
     // BFS traverse
     // void  BSTTraverse(string actor, )
     // For test

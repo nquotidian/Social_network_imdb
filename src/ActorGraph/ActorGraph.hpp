@@ -85,8 +85,8 @@ class ActorGraph {
     /* Calculate priority */
     string coled_actors(Actor* actor, vector<Actor*> list);
     string uncoled_actors(Actor* actor, vector<Actor*> list);
-    int connection_between_coled_casts(Actor* s_actor, Actor* t_actor);
-    int connection_between_uncol_casts(Actor* s_actor, Actor* t_actor);
+    // int connection_between_coled_casts(Actor* s_actor, Actor* t_actor);
+    int connection_between_casts(Actor* s_actor, Actor* t_actor);
 
     // BFS traverse
     // void  BSTTraverse(string actor, )

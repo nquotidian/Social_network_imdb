@@ -87,12 +87,6 @@ TEST_F(ActorUnweiGraphFixture, TEST_BFS) {
     graph_unwei.BFS(source);
 }
 
-/* Test the path between actors in the graph */
-TEST_F(ActorUnweiGraphFixture, TEST_PREDICT_LINK) {
-    string source = "James McAvoy";
-    graph_unwei.BFS(source);
-}
-
 /** Build a weighted graph of actors
  *    Storing the list of actors and movies,
  *    connect actors with movies

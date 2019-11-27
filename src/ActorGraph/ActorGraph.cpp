@@ -320,6 +320,12 @@ void ActorGraph::predict_link(string source, ofstream& ofs_col,
     } else {
         ofs_col << endl;
     }
+    if (!uncol_list.empty()) {
+        string str = uncoled_actors(actors_list[source], uncol_list);
+        ofs_uncol << str << endl;
+    } else {
+        ofs_uncol << endl;
+    }
     // vector<string> uncol_vec = find_uncollaborated_group(source);
     // ofs_uncol << endl;
 }
@@ -394,20 +400,7 @@ string ActorGraph::coled_actors(Actor* actor, vector<Actor*> list) {
     int priority = 0;
     for (auto i = list.begin(); i != list.end(); i++) {
         priority = 0;
-        auto m_list = actor->get_movie_lists();
-        auto m_it = m_list.begin();
-        for (; m_it != m_list.end(); m_it++) {
-            auto a_list = (*m_it)->get_actor_lists();
-            auto a_it = a_list.begin();
-            for (; a_it != a_list.end(); a_it++) {
-                string name = (*a_it)->get_actor_name();
-                if (name != actor->get_actor_name() &&
-                    name != (*i)->get_actor_name()) {
-                    priority += connection_between_casts((*a_it), (*i));
-                }
-            }
-        }
-        // cout << "   " << (*i)->get_actor_name() << "   " << priority << endl;
+        priority += connection_between_uncol_casts(actor, (*i));
         Link* lk = new Link((*i), priority);
         my_pq.push(lk);
     }
@@ -429,22 +422,73 @@ string ActorGraph::coled_actors(Actor* actor, vector<Actor*> list) {
 }
 
 string ActorGraph::uncoled_actors(Actor* actor, vector<Actor*> list) {
-    return "1243";
+    priority_queue<Link*, std::vector<Link*>, LinkComp> my_pq;
+    int priority = 0;
+    for (auto i = list.begin(); i != list.end(); i++) {
+        priority = 0;
+        priority += connection_between_uncol_casts(actor, (*i));
+        Link* lk = new Link((*i), priority);
+        my_pq.push(lk);
+    }
+
+    // Decide the output size
+    string result;
+    Link* ptr = nullptr;
+    unsigned size = my_pq.size();
+    unsigned n = size > 4 ? 4 : size;
+    for (unsigned i = 0; i < n - 1; i++) {
+        ptr = my_pq.top();
+        string name = ptr->actor->get_actor_name();
+        result += name;
+        result += "\t";
+        my_pq.pop();
+    }
+    ptr = my_pq.top();
+    result += ptr->actor->get_actor_name();
+    return result;
 }
 
-int ActorGraph::connection_between_casts(Actor* s_actor, Actor* t_actor) {
+int ActorGraph::connection_between_coled_casts(Actor* s_actor, Actor* t_actor) {
     // Return the number of connections between two actors
     int i = 0;
-    auto m_list = s_actor->get_movie_lists();
+    std::vector<Movie*> m_list = s_actor->get_movie_lists();
     auto m_it = m_list.begin();
     for (; m_it != m_list.end(); m_it++) {
-        auto a_list = (*m_it)->get_actor_lists();
+        std::vector<Actor*> a_list = (*m_it)->get_actor_lists();
         auto a_it = a_list.begin();
         for (; a_it != a_list.end(); a_it++) {
-            string name = (*a_it)->get_actor_name();
-            if (name != s_actor->get_actor_name()) {
+            if ((*a_it) != s_actor) {
                 if ((*a_it) == t_actor) {
                     i++;
+                }
+            }
+        }
+    }
+    return i;
+}
+
+int ActorGraph::connection_between_uncol_casts(Actor* s_actor, Actor* t_actor) {
+    // Return the number of connections between two actors
+    int i = 0;
+    std::vector<Movie*> m_list = s_actor->get_movie_lists();
+    auto m_it = m_list.begin();
+    for (; m_it != m_list.end(); m_it++) {
+        std::vector<Actor*> a_list = (*m_it)->get_actor_lists();
+        auto a_it = a_list.begin();
+        for (; a_it != a_list.end(); a_it++) {
+            if ((*a_it) != s_actor) {
+                std::vector<Movie*> m_list_2 = (*a_it)->get_movie_lists();
+                auto m_it_2 = m_list_2.begin();
+                for (; m_it_2 != m_list_2.end(); m_it_2++) {
+                    std::vector<Actor*> a_list_2 = (*m_it_2)->get_actor_lists();
+                    auto a_it_2 = a_list_2.begin();
+                    for (; a_it_2 != a_list_2.end(); a_it_2++) {
+                        if ((*a_it_2) != (*a_it)) {
+                            if ((*a_it_2) == t_actor) {
+                                i++;
+                            }
+                        }
+                    }
                 }
             }
         }

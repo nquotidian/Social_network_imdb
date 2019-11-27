@@ -27,8 +27,7 @@ class ActorUnweiGraphFixture : public ::testing::Test {
   public:
     ActorUnweiGraphFixture() {
         // initialization code here
-        graph_unwei.loadFromFile("/Code/cse100_pa4/data/imdb_small_sample.tsv",
-                                 false);
+        graph_unwei.loadFromFile("../data/imdb_small_sample.tsv", false);
     }
 };
 
@@ -55,24 +54,24 @@ TEST_F(ActorUnweiGraphFixture, TEST_ACTOR_NAME) {
     string source = "James McAvoy";
     string target = "Michael Fassbender";
     ofstream ofs;
-    ofs.open("/Code/cse100_pa4/data/test.txt", std::ofstream::out);
+    ofs.open("../data/test.txt", std::ofstream::out);
     graph_unwei.find_path_between_actors(ofs, source, target);
     ofs.close();
 }
 
 /* Test the path between actors in the graph */
 TEST_F(ActorUnweiGraphFixture, TEST_LOAD_PAIRS_FILE) {
-    string input = "/Code/cse100_pa4/data/test_pairs.tsv";
-    string output = "/Code/cse100_pa4/data/output.txt";
+    string input = "../data/test_pairs.tsv";
+    string output = "../data/output.txt";
     bool load = graph_unwei.load_pairs_file(input, output);
     ASSERT_TRUE(load);
 }
 
 /* Test the path between actors in the graph */
 TEST_F(ActorUnweiGraphFixture, TEST_LOAD_PREDICT_FILE) {
-    string input = "/Code/cse100_pa4/data/test_actors.tsv";
-    string output_1 = "/Code/cse100_pa4/data/col_output.txt";
-    string output_2 = "/Code/cse100_pa4/data/uncol_output.txt";
+    string input = "../data/test_actors.tsv";
+    string output_1 = "../data/col_output.txt";
+    string output_2 = "../data/uncol_output.txt";
     string source = "James McAvoy";
     ofstream ofs_1(output_1, std::ofstream::out);
     ofstream ofs_2(output_2, std::ofstream::out);
@@ -98,8 +97,7 @@ class ActorWeiGraphFixture : public ::testing::Test {
   public:
     ActorWeiGraphFixture() {
         // initialization code here
-        graph_wei.loadFromFile("/Code/cse100_pa4/data/imdb_small_sample.tsv",
-                               true);
+        graph_wei.loadFromFile("../data/imdb_small_sample.tsv", true);
     }
 };
 

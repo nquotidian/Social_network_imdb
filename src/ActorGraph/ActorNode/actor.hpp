@@ -27,13 +27,16 @@ class Actor {
     string name;
     int dist;
     std::pair<Actor*, Movie*> prev;
-
+    int pri;
     vector<Movie*> movies;
 
   public:
     /* Constructor of actor, add first movie */
     Actor(string actor_name)
-        : name(actor_name), dist(INT8_MAX), prev(make_pair(nullptr, nullptr)) {}
+        : name(actor_name),
+          dist(INT8_MAX),
+          prev(make_pair(nullptr, nullptr)),
+          pri(0) {}
     /* Get actor's name */
     string get_actor_name() { return name; }
     /* Created a new movie and points the actor to the movie*/
@@ -53,6 +56,10 @@ class Actor {
         prev.first = a_ptr;
         prev.second = m_ptr;
     }
+    /* Increase the priority by 1 */
+    void priority_incre() { pri++; }
+    /* Get the priority */
+    int get_priority() { return pri; }
     /* Get the prev pointer */
     std::pair<Actor*, Movie*> get_prev() { return prev; }
     /* Get the list of movies of the actor*/

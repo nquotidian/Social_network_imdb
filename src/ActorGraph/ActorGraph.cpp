@@ -256,14 +256,33 @@ void ActorGraph::find_path_between_actors(ofstream& fs, string source,
 /* Predict link of the actor */
 void ActorGraph::predict_link(string source, ofstream& ofs_col,
                               ofstream& ofs_uncol) {
-    vector<string> col_vec = find_collaborated_group(source);
-    if (!col_vec.empty()) {
-        ofs_col << "not empty" << endl;
-    } else {
-        ofs_col << endl;
+    BFS(source);
+    vector<Actor*> col_list;
+    vector<Actor*> uncol_list;
+    for (auto it = actors_list.begin(); it != actors_list.end(); it++) {
+        if ((*it).second->get_dist() == 1) {
+            col_list.push_back((*it).second);
+        } else if ((*it).second->get_dist() == 2) {
+            uncol_list.push_back((*it).second);
+        }
     }
-    vector<string> uncol_vec = find_uncollaborated_group(source);
-    ofs_uncol << endl;
+    for (auto i = col_list.begin(); i != col_list.end(); i++) {
+        cout << (*i)->get_actor_name() << "   dist: " << (*i)->get_dist()
+             << endl;
+    }
+    for (auto j = uncol_list.begin(); j != uncol_list.end(); j++) {
+        cout << (*j)->get_actor_name() << "   dist: " << (*j)->get_dist()
+             << endl;
+    }
+
+    // vector<string> col_vec = find_collaborated_group(source);
+    // if (!col_vec.empty()) {
+    //     ofs_col << "not empty" << endl;
+    // } else {
+    //     ofs_col << endl;
+    // }
+    // vector<string> uncol_vec = find_uncollaborated_group(source);
+    // ofs_uncol << endl;
 }
 
 // Load predict file
@@ -297,6 +316,58 @@ bool ActorGraph::load_predict_file(string predictFile, string coledFile,
     ofs_col.close();
     ofs_uncol.close();
     return true;
+}
+
+/* Partial BFS of the graph */
+void ActorGraph::BFS(string source) {
+    // auto tgt_actor = actors_list[target];
+    if (actors_list.find(source) == actors_list.end()) {
+        return;
+    }
+    // Initialize
+    auto map_it = actors_list.begin();
+    for (; map_it != actors_list.end(); map_it++) {
+        map_it->second->set_dist(INT8_MAX);
+        map_it->second->set_prev(nullptr, nullptr);
+    }
+    // Set the source distance
+    // Find the source actor
+    auto src_actor = actors_list[source];
+    src_actor->set_dist(0);
+    queue<Actor*> que;
+    que.push(src_actor);
+    bool flag = false;
+    Actor* neighbor = nullptr;
+    while (!que.empty() && !flag) {
+        auto next = que.front();
+        que.pop();
+        vector<Movie*> m_list = next->get_movie_lists();
+        vector<Movie*>::iterator m_it = m_list.begin();
+        for (; m_it != m_list.end() && !flag; m_it++) {
+            vector<Actor*> a_list = (*m_it)->get_actor_lists();
+            vector<Actor*>::iterator a_it = a_list.begin();
+            for (; a_it != a_list.end() && !flag; a_it++) {
+                neighbor = *a_it;
+                string name = neighbor->get_actor_name();
+                if (name != next->get_actor_name()) {
+                    // if not visted, visit
+                    if (neighbor->get_dist() == INT8_MAX) {
+                        neighbor->set_dist(next->get_dist() + 1);
+                        neighbor->set_prev(next, *m_it);
+                        // neighbor->priority_incre();
+                        que.push(neighbor);
+                        if (next->get_dist() > 2) {
+                            flag = true;
+                        }
+                    }
+                    // else {
+                    //     neighbor->priority_incre();
+                    //     // que.push(neighbor);
+                    // }
+                }
+            }
+        }
+    }
 }
 
 /* Find actors who have collaborated with given actor */

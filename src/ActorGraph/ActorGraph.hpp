@@ -75,6 +75,8 @@ class ActorGraph {
                            string uncoledFile);
     /* Predict link of the actor */
     void predict_link(string source, ofstream& ofs_col, ofstream& ofs_uncol);
+    /* BFS of the graph */
+    void BFS(string source);
     /* Find actors who have collaborated with given actor */
     vector<string> find_collaborated_group(string source);
     /* Find actors who have not collaborated with given actor */

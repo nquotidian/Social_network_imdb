@@ -27,8 +27,8 @@ class Actor {
     string name;
     int dist;
     std::pair<Actor*, Movie*> prev;
-    int pri;
     vector<Movie*> movies;
+    bool done;
 
   public:
     /* Constructor of actor, add first movie */
@@ -36,7 +36,7 @@ class Actor {
         : name(actor_name),
           dist(INT8_MAX),
           prev(make_pair(nullptr, nullptr)),
-          pri(0) {}
+          done(false) {}
     /* Get actor's name */
     string get_actor_name() { return name; }
     /* Created a new movie and points the actor to the movie*/
@@ -56,14 +56,26 @@ class Actor {
         prev.first = a_ptr;
         prev.second = m_ptr;
     }
-    /* Increase the priority by 1 */
-    void priority_incre() { pri++; }
-    /* Get the priority */
-    int get_priority() { return pri; }
+    /* Set the done flag to be true */
+    void set_done(bool d) { done = d; }
+    /* Get the done flag */
+    int get_done() { return done; }
     /* Get the prev pointer */
     std::pair<Actor*, Movie*> get_prev() { return prev; }
     /* Get the list of movies of the actor*/
     vector<Movie*> get_movie_lists() { return movies; }
+};
+
+// Comparator for the priority queue when doing the dijkstra algorithm
+struct DijkComp {
+    /* Comparator */
+    bool operator()(Actor*& l, Actor*& r) const {
+        if (l->get_dist() != r->get_dist()) {
+            return l->get_dist() > r->get_dist();
+        } else {
+            return l->get_actor_name() > r->get_actor_name();
+        }
+    }
 };
 
 #endif  // ACTOR_HPP

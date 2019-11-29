@@ -84,11 +84,11 @@ void path_finder(string castsFile, string pairsFile, string outputFile,
     ActorGraph actor_graph;
     if (weighted) {
         if (actor_graph.loadFromFile(castsFile.c_str(), true)) {
-            actor_graph.load_pairs_file(pairsFile, outputFile);
+            actor_graph.load_pairs_file(pairsFile, outputFile, true);
         }
     } else {
         if (actor_graph.loadFromFile(castsFile.c_str(), false)) {
-            actor_graph.load_pairs_file(pairsFile, outputFile);
+            actor_graph.load_pairs_file(pairsFile, outputFile, false);
         }
     }
 }

@@ -65,9 +65,11 @@ class ActorGraph {
     void build_weighted_actor_graph(string actor_name, string movie_title,
                                     int year);
     // Load the pairs file
-    bool load_pairs_file(string pairsFile, string outputFile);
+    bool load_pairs_file(string pairsFile, string outputFile, bool weighted);
     // Find the shorest path between source actor and the target actor
     void find_path_between_actors(ofstream& fs, string source, string target);
+    // Find the shortest path using dijkstra algorithm
+    void find_path_dijkstra(ofstream& fs, string source, string target);
     /* Get all of the connections of the actor, return to a vector*/
     vector<Actor*> get_connection_list(Actor* actor);
     /* Linke predictor part */

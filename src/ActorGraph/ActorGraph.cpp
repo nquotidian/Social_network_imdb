@@ -120,6 +120,7 @@ void ActorGraph::build_unweighted_actor_graph(string actor_name,
 void ActorGraph::build_weighted_actor_graph(string actor_name,
                                             string movie_title, int year) {
     string movie_year = movie_title + "#@" + std::to_string(year);
+    // weight of the movie = 1+(2019-Y)
     add_actor_movie_node(actor_name, movie_year, 2020 - year);
     auto actor = actors_list[actor_name];
     auto movie = movies_list[movie_year];
@@ -130,7 +131,8 @@ void ActorGraph::build_weighted_actor_graph(string actor_name,
 }
 
 // Load the pairs file
-bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
+bool ActorGraph::load_pairs_file(string pairsFile, string outputFile,
+                                 bool weighted) {
     // keep reading the file, if it's not the end of the file
     // just like the load file function, get he source actor's name
     // and the target actor's name
@@ -176,7 +178,12 @@ bool ActorGraph::load_pairs_file(string pairsFile, string outputFile) {
         string target(record[1]);
 
         // find the path and output
-        find_path_between_actors(ofs, source, target);
+        if (weighted) {
+            find_path_dijkstra(ofs, source, target);
+
+        } else {
+            find_path_between_actors(ofs, source, target);
+        }
     }
     if (!infile.eof()) {
         cerr << "Failed to read " << pairsFile << "!\n";
@@ -253,6 +260,72 @@ void ActorGraph::find_path_between_actors(ofstream& fs, string source,
     }
 }
 
+// Find the shortest path using dijkstra algorithm
+void ActorGraph::find_path_dijkstra(ofstream& fs, string source,
+                                    string target) {
+    // auto tgt_actor = actors_list[target];
+    if (actors_list.find(source) == actors_list.end() ||
+        actors_list.find(target) == actors_list.end()) {
+        fs << endl;
+        return;
+    }
+    // Initialize weighted graph
+    auto map_it = actors_list.begin();
+    for (; map_it != actors_list.end(); map_it++) {
+        map_it->second->set_dist(INT8_MAX);
+        map_it->second->set_prev(nullptr, nullptr);
+        map_it->second->set_done(false);
+    }
+    // Set the source distance
+    // Find the source actor
+    Actor* src_actor = actors_list[source];
+    src_actor->set_dist(0);
+    priority_queue<Actor*, vector<Actor*>, DijkComp> dijk_que;
+    dijk_que.push(src_actor);
+    Actor* neighbor = nullptr;
+    while (!dijk_que.empty()) {
+        Actor* next = dijk_que.top();
+        dijk_que.pop();
+        if (!next->get_done()) {
+            next->set_done(true);
+            vector<Movie*> m_list = next->get_movie_lists();
+            vector<Movie*>::iterator m_it = m_list.begin();
+            for (; m_it != m_list.end(); m_it++) {
+                vector<Actor*> a_list = (*m_it)->get_actor_lists();
+                vector<Actor*>::iterator a_it = a_list.begin();
+                for (; a_it != a_list.end(); a_it++) {
+                    neighbor = *a_it;
+                    if (neighbor != next) {
+                        int distance = next->get_dist() + (*m_it)->get_weight();
+                        string name = neighbor->get_actor_name();
+                        if (distance < neighbor->get_dist()) {
+                            neighbor->set_dist(distance);
+                            neighbor->set_prev(next, *m_it);
+                            dijk_que.push(neighbor);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (actors_list.find(target) != actors_list.end()) {
+        Actor* tar = actors_list[target];
+        if (tar->get_prev().first != nullptr) {
+            string result = "";
+            result += "(" + tar->get_actor_name() + ")";
+            auto ptr = tar->get_prev();
+            while (ptr.first && ptr.second) {
+                result.insert(0,
+                              "[" + ptr.second->get_movie_name_year() + "]-->");
+                result.insert(0, "(" + ptr.first->get_actor_name() + ")--");
+                ptr = ptr.first->get_prev();
+            }
+            fs << result << endl;
+        } else {
+            fs << endl;
+        }
+    }
+}
 // Load predict file
 bool ActorGraph::load_predict_file(string predictFile, string coledFile,
                                    string uncoledFile) {
@@ -353,16 +426,11 @@ void ActorGraph::BFS(string source) {
                     if (neighbor->get_dist() == INT8_MAX) {
                         neighbor->set_dist(next->get_dist() + 1);
                         neighbor->set_prev(next, *m_it);
-                        // neighbor->priority_incre();
                         que.push(neighbor);
                         if (next->get_dist() > 2) {
                             flag = true;
                         }
                     }
-                    // else {
-                    //     neighbor->priority_incre();
-                    //     // que.push(neighbor);
-                    // }
                 }
             }
         }

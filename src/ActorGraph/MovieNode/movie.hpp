@@ -43,6 +43,8 @@ class Movie {
         else
             return n * (n - 1);
     }
+    /* Get the weight of the movie */
+    int get_weight() { return weight; }
     /* Get the list of movies of the actor*/
     vector<Actor*> get_actor_lists() { return actors; }
 };

@@ -63,7 +63,7 @@ TEST_F(ActorUnweiGraphFixture, TEST_ACTOR_NAME) {
 TEST_F(ActorUnweiGraphFixture, TEST_LOAD_PAIRS_FILE) {
     string input = "../data/test_pairs.tsv";
     string output = "../data/output.txt";
-    bool load = graph_unwei.load_pairs_file(input, output);
+    bool load = graph_unwei.load_pairs_file(input, output, false);
     ASSERT_TRUE(load);
 }
 

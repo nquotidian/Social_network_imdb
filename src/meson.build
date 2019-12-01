@@ -11,3 +11,9 @@ pathfinder_exe = executable('linkpredictor.cpp.executable',
     dependencies : [actor_graph_dep, cxxopts_dep],
 #    include_directories : inc,
     install : true)
+
+pathfinder_exe = executable('movietraveler.cpp.executable', 
+    sources: ['movietraveler.cpp', 'FileUtils.hpp'],
+    dependencies : [actor_graph_dep, cxxopts_dep],
+#    include_directories : inc,
+    install : true)

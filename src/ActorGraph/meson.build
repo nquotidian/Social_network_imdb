@@ -1,6 +1,7 @@
 # Define ActorGraph using function library()
 subdir('MovieNode')
 subdir('ActorNode')
+subdir('DisjointSet')
 
 inc = include_directories('.')
 

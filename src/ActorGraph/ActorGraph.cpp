@@ -526,9 +526,9 @@ int ActorGraph::connection_between_casts(Actor* s_actor, Actor* t_actor) {
 // MST part
 // Initialize the disjoint set which storing all of the actor nodes
 void ActorGraph::disjoint_set_init() {
-    unordered_map<string, int> actors_set;
+    unordered_map<string, string> actors_set;
     for (auto i = actors_list.begin(); i != actors_list.end(); i++) {
-        actors_set[(*i).second->get_actor_name()] = -1;
+        actors_set[(*i).second->get_actor_name()] = "-1";
     }
 
     // build a heap for all of the movies

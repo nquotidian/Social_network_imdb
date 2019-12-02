@@ -23,20 +23,50 @@ class Set;
  * */
 class Set {
   private:
-    unordered_map<string, int> actors;
+    unordered_map<string, string> actors;
+    unordered_map<string, int> size;
     vector<string> movies;
+    void path_compression(vector<string> vec, string sentinel) {
+        for (string i : vec) {
+            actors[i] = sentinel;
+        }
+    }
 
   public:
     /* Constructor of movie */
-    Set(unordered_map<string, int>& a, vector<string>& m) {
+    Set(unordered_map<string, string>& a, vector<string>& m) {
         actors = a;
         movies = m;
+        for (auto i = a.begin(); i != a.end(); i++) {
+            size[i->first] = 1;
+        }
     }
-    int find(string name) {
-        // if(actors[name] == -1)
+    string find(string name) {
+        vector<string> path;
+        while (actors[name] != "-1") {
+            path.push_back(name);
+            name = actors[name];
+        }
+        path_compression(path, name);
+        return name;
     }
-    void union_nodes(int i, int j) {
-        //
+
+    void union_nodes(string i, string j) {
+        string senti_i = find(i);
+        string senti_j = find(j);
+        int size_i = size[senti_i];
+        int size_j = size[senti_j];
+        if (senti_i != senti_j) {
+            if (size_i < size_j) {
+                // size of j equals to size of i plus j
+                size[senti_j] = size[senti_j] + size[senti_i];
+                actors[senti_i] = senti_j;
+            } else {
+                // size of i equals to size of j plus i
+                size[senti_i] = size[senti_i] + size[senti_j];
+                actors[senti_j] = senti_i;
+            }
+        }
     }
 };
 

@@ -9,6 +9,7 @@
  */
 
 #include "ActorGraph.hpp"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <queue>
@@ -520,6 +521,25 @@ int ActorGraph::connection_between_casts(Actor* s_actor, Actor* t_actor) {
         }
     }
     return i;
+}
+
+// MST part
+// Initialize the disjoint set which storing all of the actor nodes
+void ActorGraph::disjoint_set_init() {
+    unordered_map<string, int> actors_set;
+    for (auto i = actors_list.begin(); i != actors_list.end(); i++) {
+        actors_set[(*i).second->get_actor_name()] = -1;
+    }
+
+    // build a heap for all of the movies
+    vector<string> heap;
+    for (auto it = movies_list.begin(); it != movies_list.end(); it++) {
+        heap.push_back(it->second->get_movie_name_year());
+    }
+    // std::make_heap(heap.begin(), heap.end(), MSTcompare);
+    // generate MST
+    // generate_mst(vector<string>& heap, unordered_map<string, int>&
+    // actors_set);
 }
 
 long ActorGraph::number_of_actors() {

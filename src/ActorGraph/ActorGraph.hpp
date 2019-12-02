@@ -86,6 +86,10 @@ class ActorGraph {
     // int connection_between_coled_casts(Actor* s_actor, Actor* t_actor);
     int connection_between_casts(Actor* s_actor, Actor* t_actor);
 
+    // MST part
+    // Initialize the disjoint set which storing all of the actor nodes
+    void disjoint_set_init();
+
     // BFS traverse
     // void  BSTTraverse(string actor, )
     // For test

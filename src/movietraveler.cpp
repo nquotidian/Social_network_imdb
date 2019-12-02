@@ -54,21 +54,26 @@ int main(int argc, char* argv[]) {
     }
 }
 
-void link_predictor(string castsFile, string inputFile, string coledFile,
-                    string uncoledFile) {
+void movie_traveler(string castsFile, string outputFile) {
     // Create a file stream and read file in binary mode
     FileUtils fu;
 
     // If the input file is empty, output an empty file
-    if (fu.isEmptyFile(castsFile) || fu.isEmptyFile(inputFile)) {
-        std::ofstream output(coledFile);
-        std::ofstream output_2(uncoledFile);
+    if (fu.isEmptyFile(castsFile)) {
+        std::ofstream output(outputFile);
         return;
     }
 
     ActorGraph actor_graph;
     if (actor_graph.loadFromFile(castsFile.c_str(), true)) {
         // actor_graph.
-        actor_graph.load_predict_file(inputFile, coledFile, uncoledFile);
+        // Call the function to generate the MST
+        // actor_graph.generate_MST(outputFile);
+        actor_graph.disjoint_set_init();
+
+        // Build a heap for all of the movies
+        // build a disjoint set for all of the actors
+        // generate the MST
+        // print out the result
     }
 }

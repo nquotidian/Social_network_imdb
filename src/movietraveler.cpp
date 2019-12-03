@@ -46,9 +46,10 @@ int main(int argc, char* argv[]) {
     } else if (!FileUtils::isValidFile(castsFileName)) {
         cout << options.help({""}) << std::endl;
         exit(0);
-    } else if (!outputFile.empty())
-        cout << "Call the movietraveler function " << endl;
-    else {
+    } else if (!outputFile.empty()) {
+        // cout << "Call the movietraveler function " << endl;
+        movie_traveler(castsFileName, outputFile);
+    } else {
         cout << options.help({""}) << std::endl;
         exit(0);
     }

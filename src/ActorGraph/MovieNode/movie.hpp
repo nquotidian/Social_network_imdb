@@ -54,7 +54,7 @@ class Movie {
 /* Comparator */
 bool MSTcompare(Movie*& l, Movie*& r) {
     if (l->get_weight() != r->get_weight()) {
-        return l->get_weight() > r->get_weight();
+        return l->get_weight() < r->get_weight();
     } else {
         return l->get_movie_name_year() > r->get_movie_name_year();
     }

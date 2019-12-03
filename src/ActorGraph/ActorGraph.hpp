@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 #include "ActorNode/actor.hpp"
+#include "DisjointSet/disjoint.hpp"
 #include "MovieNode/movie.hpp"
 
 // Maybe include some data structures here
@@ -89,7 +91,6 @@ class ActorGraph {
     // MST part
     // Initialize the disjoint set which storing all of the actor nodes
     void disjoint_set_init();
-
     // BFS traverse
     // void  BSTTraverse(string actor, )
     // For test

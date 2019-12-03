@@ -2,7 +2,8 @@
  * movie.hpp
  * Author: Qing Niu
  * Date:   Nov 22, 2019
- *
+ * With the reference of the discussion session on week 9,
+ * Python code showed by Sander Valstar
  * Movie class hearder file
  */
 
@@ -25,7 +26,7 @@ class Set {
   private:
     unordered_map<string, string> actors;
     unordered_map<string, int> size;
-    vector<string> movies;
+    // vector<string> movies;
     void path_compression(vector<string> vec, string sentinel) {
         for (string i : vec) {
             actors[i] = sentinel;
@@ -34,9 +35,9 @@ class Set {
 
   public:
     /* Constructor of movie */
-    Set(unordered_map<string, string>& a, vector<string>& m) {
+    Set(unordered_map<string, string>& a) {
         actors = a;
-        movies = m;
+        // movies = m;
         for (auto i = a.begin(); i != a.end(); i++) {
             size[i->first] = 1;
         }

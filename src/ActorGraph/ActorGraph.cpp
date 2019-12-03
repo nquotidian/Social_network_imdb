@@ -530,14 +530,56 @@ void ActorGraph::disjoint_set_init() {
     for (auto i = actors_list.begin(); i != actors_list.end(); i++) {
         actors_set[(*i).second->get_actor_name()] = "-1";
     }
-
+    Set d_set(actors_set);
     // build a heap for all of the movies
-    vector<string> heap;
+    vector<Movie*> heap;
     for (auto it = movies_list.begin(); it != movies_list.end(); it++) {
-        heap.push_back(it->second->get_movie_name_year());
+        heap.push_back(it->second);
     }
     // std::make_heap(heap.begin(), heap.end(), MSTcompare);
     // generate MST
+    std::sort(heap.begin(), heap.end(), MSTcompare);
+
+    bool done = false;
+    unsigned nodes = 0, edges = 0, total_weight = 0;
+    unordered_set<string> visited;
+    for (auto i = heap.begin(); i != heap.end() && !done; i++) {
+        auto list = (*i)->get_actor_lists();
+        // string name_1 = list[0]->get_actor_name();
+        string name_1 = list[0]->get_actor_name();
+        string name_2 = list[1]->get_actor_name();
+        // string name_1;
+        // string name_2;
+        // // Find the actor node that was not connected
+        // for (unsigned j = 0; j < list.size() - 1; j++) {
+        //     if (visited.find(list[j]->get_actor_name()) == visited.end()
+        //     ||
+        //         visited.find(list[j + 1]->get_actor_name()) ==
+        //         visited.end()) { name_1 = list[j]->get_actor_name();
+        //         name_2 = list[j + 1]->get_actor_name(); break;
+        //     }
+        // }
+        d_set.union_nodes(name_1, name_2);
+        visited.insert(name_1);
+        visited.insert(name_2);
+        cout << "(" << name_1 << ")<--[" << (*i)->get_movie_name_year()
+             << "]-->(" << name_2 << ")" << endl;
+        cout << " weight  " << (*i)->get_weight() << endl;
+        // weight
+        total_weight += (*i)->get_weight();
+        // nodes
+        edges++;
+        // cout << "actors list size " << actors_list.size() << endl;
+        if (visited.size() == actors_list.size()) {
+            done = true;
+        }
+        // d_set.union_nodes()
+    }
+    nodes = edges + 1;
+
+    cout << "#NODE CONNECTED: " << edges << endl;
+    cout << "#EDGE CHOSEN: " << nodes << endl;
+    cout << "TOTAL EDGE WEIGHTS: " << total_weight << endl;
     // generate_mst(vector<string>& heap, unordered_map<string, int>&
     // actors_set);
 }

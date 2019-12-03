@@ -23,6 +23,14 @@ using namespace std;
  * Constructor of the Actor graph
  */
 ActorGraph::ActorGraph(void) {}
+ActorGraph::~ActorGraph(void) {
+    for (auto i = movies_list.begin(); i != movies_list.end(); i++) {
+        delete i->second;
+    }
+    for (auto j = actors_list.begin(); j != actors_list.end(); j++) {
+        delete j->second;
+    }
+}
 
 /** You can modify this method definition as you wish
  *

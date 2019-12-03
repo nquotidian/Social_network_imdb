@@ -17,3 +17,9 @@ pathfinder_exe = executable('movietraveler.cpp.executable',
     dependencies : [actor_graph_dep, cxxopts_dep],
 #    include_directories : inc,
     install : true)
+
+pathfinder_exe = executable('navigationsystem.cpp.executable', 
+    sources: ['navigationsystem.cpp', 'FileUtils.hpp'],
+    dependencies : [actor_graph_dep, cxxopts_dep],
+#    include_directories : inc,
+    install : true)

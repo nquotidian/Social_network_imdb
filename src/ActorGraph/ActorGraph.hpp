@@ -55,6 +55,7 @@ class ActorGraph {
      * Constuctor of the Actor graph
      */
     ActorGraph(void);
+    ~ActorGraph(void);
 
     // Maybe add some more methods here
     // Add actor node and movie node

@@ -90,7 +90,8 @@ class ActorGraph {
 
     // MST part
     // Initialize the disjoint set which storing all of the actor nodes
-    void disjoint_set_init();
+    void disjoint_set_init(string outputFile);
+
     // BFS traverse
     // void  BSTTraverse(string actor, )
     // For test

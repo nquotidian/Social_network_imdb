@@ -5,6 +5,7 @@
  *
  */
 
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include "ActorGraph.hpp"
@@ -48,7 +49,14 @@ int main(int argc, char* argv[]) {
         exit(0);
     } else if (!outputFile.empty()) {
         // cout << "Call the movietraveler function " << endl;
+        // auto t1 = std::chrono::high_resolution_clock::now();
         movie_traveler(castsFileName, outputFile);
+
+        // auto t2 = std::chrono::high_resolution_clock::now();
+        // auto duration =
+        //     std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+        //         .count();
+        // std::cout << "duration: " << duration / 1000 << endl;
     } else {
         cout << options.help({""}) << std::endl;
         exit(0);
@@ -67,14 +75,7 @@ void movie_traveler(string castsFile, string outputFile) {
 
     ActorGraph actor_graph;
     if (actor_graph.loadFromFile(castsFile.c_str(), true)) {
-        // actor_graph.
         // Call the function to generate the MST
-        // actor_graph.generate_MST(outputFile);
-        actor_graph.disjoint_set_init();
-
-        // Build a heap for all of the movies
-        // build a disjoint set for all of the actors
-        // generate the MST
-        // print out the result
+        actor_graph.disjoint_set_init(outputFile);
     }
 }

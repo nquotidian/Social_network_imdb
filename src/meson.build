@@ -1,4 +1,5 @@
 subdir('ActorGraph')
+subdir('Navi')
 
 pathfinder_exe = executable('pathfinder.cpp.executable', 
     sources: ['pathfinder.cpp', 'FileUtils.hpp'],

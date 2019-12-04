@@ -1,13 +1,15 @@
 /*
- * linkpredictor.cpp
+ * navigationsystem.cpp
  * Author: Qing Niu
- * Date:   Nov 22, 2019
+ * Date:   Dec 3, 2019
  *
  */
 
 #include <fstream>
 #include <iostream>
 #include "FileUtils.hpp"
+#include "Navi/Navi.hpp"
+#include "Navi/Place.hpp"
 #include "cxxopts.hpp"
 
 /* add pseudo compression with ascii encoding and naive header
@@ -58,15 +60,16 @@ int main(int argc, char* argv[]) {
         exit(0);
     } else if (!outputFile.empty()) {
         // Build unweighted graph
-        /// link_predictor(xyFile, pairsFile, queryPairs, outputFile);
+        navigationsystem(xyFile, pairsFile, queryPairs, outputFile);
+
     } else {
         cout << options.help({""}) << std::endl;
         exit(0);
     }
 }
 
-void link_predictor(string coordinateFile, string pairsFile, string query,
-                    string outputFile) {
+void navigationsystem(string coordinateFile, string pairsFile, string query,
+                      string outputFile) {
     // Create a file stream and read file in binary mode
     FileUtils fu;
 
@@ -76,9 +79,12 @@ void link_predictor(string coordinateFile, string pairsFile, string query,
         return;
     }
 
-    // ActorGraph actor_graph;
-    // if (actor_graph.loadFromFile(coordinateFile.c_str(), true)) {
-    //     // actor_graph.
-    //     actor_graph.load_predict_file(pairsFile, query, outputFile);
-    // }
+    NaviGraph navi_graph;
+    if (navi_graph.loadFromFile(coordinateFile.c_str())) {
+        if (navi_graph.load_pairs_file(pairsFile.c_str())) {
+            navi_graph.load_pairs_file(pairsFile.c_str());
+            navi_graph.astar(query, outputFile);
+            //  actor_graph.load_predict_file(pairsFile, query, outputFile);
+        }
+    }
 }

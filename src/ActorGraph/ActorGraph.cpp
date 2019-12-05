@@ -10,9 +10,9 @@
 
 #include "ActorGraph.hpp"
 #include <algorithm>
+#include <climits>
 #include <fstream>
 #include <iostream>
-#include <climits>
 #include <queue>
 #include <sstream>
 #include <string>
@@ -303,15 +303,15 @@ void ActorGraph::find_path_dijkstra(ofstream& fs, string source,
                 vector<Actor*>::iterator a_it = a_list.begin();
                 for (; a_it != a_list.end(); a_it++) {
                     Actor* neighbor = *a_it;
-                    if (neighbor != next) {
-                        int distance = next->get_dist() + (*m_it)->get_weight();
-                        string name = neighbor->get_actor_name();
-                        if (distance < neighbor->get_dist()) {
-                            neighbor->set_dist(distance);
-                            neighbor->set_prev(next, *m_it);
-                            dijk_que.push(neighbor);
-                        }
+                    // if (neighbor != next) {
+                    int distance = next->get_dist() + (*m_it)->get_weight();
+                    string name = neighbor->get_actor_name();
+                    if (distance < neighbor->get_dist()) {
+                        neighbor->set_dist(distance);
+                        neighbor->set_prev(next, *m_it);
+                        dijk_que.push(neighbor);
                     }
+                    // }
                 }
             }
         }

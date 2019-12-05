@@ -9,6 +9,7 @@
 #ifndef ACTOR_HPP
 #define ACTOR_HPP
 
+#include <climits>
 #include <string>
 #include <unordered_set>
 #include <utility>
@@ -34,7 +35,7 @@ class Actor {
     /* Constructor of actor, add first movie */
     Actor(string actor_name)
         : name(actor_name),
-          dist(INT8_MAX),
+          dist(INT_MAX),
           prev(make_pair(nullptr, nullptr)),
           done(false) {}
     /* Get actor's name */

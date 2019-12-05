@@ -453,8 +453,9 @@ string ActorGraph::coled_actors(Actor* actor, vector<Actor*> list) {
     for (auto i = list.begin(); i != list.end(); i++) {
         priority = 0;
         priority += connection_between_casts(actor, (*i));
-        Link* lk = new Link((*i), priority);
-        my_pq.push(lk);
+        // Link* lk = new Link((*i), priority);
+        Link lk((*i), priority);
+        my_pq.push(&lk);
     }
     // Decide the output size
     string result;
@@ -479,8 +480,9 @@ string ActorGraph::uncoled_actors(Actor* actor, vector<Actor*> list) {
     for (auto i = list.begin(); i != list.end(); i++) {
         priority = 0;
         priority += connection_between_casts(actor, (*i));
-        Link* lk = new Link((*i), priority);
-        my_pq.push(lk);
+        // Link* lk = new Link((*i), priority);
+        Link lk((*i), priority);
+        my_pq.push(&lk);
     }
 
     // Decide the output size
